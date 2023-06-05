@@ -183,7 +183,7 @@ void send_mail(const char* receiver, const char* subject, const char* msg, const
         sprintf(buf, "--qwertyuiopasdfghjklzxcvbnm\r\n"
             "Content-Type: text/plain; charset=UTF-8\r\n\r\n");
         send_with_msg(s_fd, buf, strlen(buf), 0, "send msg boundary & header");
-        if (stat(msg, &st) == 0){
+        if (stat(msg, &st) == 0 && S_ISREG(st.st_mode)){
             // if msg is a file
             FILE *fp = fopen(msg, "r");
             // read all data from msg
@@ -197,7 +197,7 @@ void send_mail(const char* receiver, const char* subject, const char* msg, const
     send_with_msg(s_fd, "\r\n", 2, 0, "<CR><LF>");
 
     // Send attachment
-    if(att_path != NULL && stat(att_path, &st) == 0){
+    if(att_path != NULL && stat(att_path, &st) == 0 && S_ISREG(st.st_mode)){
         // send boundary
         sprintf(buf, "--qwertyuiopasdfghjklzxcvbnm\r\n");
         send_with_msg(s_fd, buf, strlen(buf), 0, "send boundary");
